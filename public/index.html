@@ -1,0 +1,53 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>Bobbin'o'matic</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+        <!-- Place favicon.ico in the root directory -->
+        <link rel="stylesheet" href="/main.css">
+    </head>
+    <body class="bg-blue-50 max-w-screen-md mx-auto pt-20">
+        <!--[if lt IE 8]>
+            <p class="browserupgrade">
+            You are using an <strong>outdated</strong> browser. Please
+            <a href="http://browsehappy.com/">upgrade your browser</a> to improve
+            your experience.
+            </p>
+        <![endif]-->
+
+        <section class="p-8 bg-white shadow rounded border border-blue-300 space-y-8 mx-4">
+            <div>
+                <h1 class="text-4xl font-bold text-center text-blue-900">Bobbin'o'matic</h1>
+                <p class="text-center">
+                    3D-printable thread bobbins with labels
+                </p>
+            </div>
+
+            <form action="/build" method="get" id="bobbin_form">
+                <label class="font-bold block mb-2" for="codes">Codes</label>
+                <textarea aria-describedby="help_text" rows="5" class="w-full border border-gray-500 rounded p-3 focus:border-blue-600 focus:ring-4 ring-blue-600" id="codes" name="codes" placeholder="D123,D456,D789, ..."></textarea>
+                <p id="help_text" class="italic text-gray-600">
+                    Enter comma-separated list of floss codes. Max 100 codes. Each code max 10 characters.
+                </p>
+
+            </form>
+
+            <div class="flex items-center justify-end space-x-4">
+                <p class="text-sm text-gray-600 max-w-[270px]">
+                    <strong>Note:</strong> Make take up to a minute to generate depending on number of codes.
+                </p>
+                <button form="bobbin_form" class="bg-blue-500 h-12 px-8 font-bold text-white rounded-lg" type="submit">Generate</button>
+            </div>
+        </section>
+        <footer class="text-center mt-8">
+            <span class="text-sm text-gray-600">Made by</span><br />
+            <a href="https://adrianaleixandre.com" class="underline">Adrian Aleixandre</a>
+            | <a href="https://twitter.com/_aaleixandre" class="underline">Twitter</a>
+        </footer>
+    </body>
+</html>
