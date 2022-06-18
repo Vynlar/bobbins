@@ -59,7 +59,8 @@ async function buildModel(code) {
 
 app.get('/build', async (req, res) => {
   let codes = req.query.codes.split(',')
-  codes = codes.map(code => code.replace(/[a-z][0-9]/, ''))
+  codes = codes.map(code => code.replace(/[a-z][0-9]/, '').trim()).filter(code => code !== '')
+
   if(codes.length > 100) {
     res.send("Too many codes. Max 100 codes allowed.")
     return
