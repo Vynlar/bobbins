@@ -11,10 +11,16 @@ const app = express()
 
 const exec = util.promisify(child_process.exec);
 
-const queue = new PQueue({ concurrency: 10 })
+const queue = new PQueue({ concurrency: 2 })
+
+const cache = {}
 
 async function buildModel(code) {
   // Write param file
+  if(cache[code]) {
+    console.log(`Returning cache for ${code}`)
+    return cache[code]
+  }
 
   const params = {
     "fileFormatVersion" : "1",
@@ -46,7 +52,9 @@ async function buildModel(code) {
   }
   console.log(`stdout: ${stdout}`);
 
-  return { path: outputPath, name: `${code}.stl` }
+  const result =  { path: outputPath, name: `${code}.stl` }
+  cache[code] = result
+  return result
 }
 
 app.get('/build', async (req, res) => {
