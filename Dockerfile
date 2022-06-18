@@ -1,6 +1,6 @@
 FROM node:18-alpine
 
-COPY package.json package-lock.json .
+COPY package*.json .
 
 RUN apk add --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing --repository http://dl-cdn.alpinelinux.org/alpine/edge/main openscad
 
