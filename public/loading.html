@@ -28,26 +28,40 @@
                 </p>
             </div>
 
-            <form action="/loading.html" method="get" id="bobbin_form">
-                <label class="font-bold block mb-2" for="codes">Codes</label>
-                <textarea aria-describedby="help_text" rows="5" class="w-full border border-gray-500 rounded p-3 focus:border-blue-600 focus:ring-4 ring-blue-600" id="codes" name="codes" placeholder="D123,D456,D789, ..."></textarea>
-                <p id="help_text" class="italic text-gray-600">
-                    Enter comma-separated list of floss codes. Max 100 codes. Each code max 10 characters.
-                </p>
+            <div class="text-center my-8">Loading...</div>
 
-            </form>
-
-            <div class="flex items-center justify-end space-x-4">
-                <p class="text-sm text-gray-600 max-w-[270px]">
-                    <strong>Note:</strong> Make take up to a minute to generate depending on number of codes.
-                </p>
-                <button form="bobbin_form" class="bg-blue-500 h-12 px-8 font-bold text-white rounded-lg" type="submit">Generate</button>
-            </div>
         </section>
         <footer class="text-center mt-8">
             <span class="text-sm text-gray-600">Made by</span><br />
             <a href="https://adrianaleixandre.com" class="underline">Adrian Aleixandre</a>
             | <a href="https://twitter.com/_aaleixandre" class="underline">Twitter</a>
         </footer>
+
+        <script type="text/javascript">
+         function poll() {
+             var search = window.location.search
+
+             var url = '/build' + search
+             fetch(url).then((response) => {
+                 if(response.status === 202) {
+                    setTimeout(poll, 5000)
+                     return
+                 } else {
+                     response.blob().then(data => {
+                         var a = document.createElement("a");
+                         a.href = window.URL.createObjectURL(data);
+                         a.download = "bobbins.zip";
+                         a.click();
+                         setTimeout(() => {
+                             window.location = '/'
+                         }, 1000)
+                     })
+                 }
+             })
+         }
+         window.addEventListener('DOMContentLoaded', () => {
+             poll()
+         })
+        </script>
     </body>
 </html>

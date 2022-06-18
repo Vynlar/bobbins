@@ -14,6 +14,7 @@ const exec = util.promisify(child_process.exec);
 const queue = new PQueue({ concurrency: 2 })
 
 const cache = {}
+const status = {}
 
 async function buildModel(code) {
   // Write param file
@@ -21,6 +22,8 @@ async function buildModel(code) {
     console.log(`Returning cache for ${code}`)
     return cache[code]
   }
+
+  status[code] = "running"
 
   const params = {
     "fileFormatVersion" : "1",
@@ -54,28 +57,40 @@ async function buildModel(code) {
 
   const result =  { path: outputPath, name: `${code}.stl` }
   cache[code] = result
+  delete status[code]
   return result
 }
 
 app.get('/build', async (req, res) => {
-  let codes = req.query.codes.split(',')
+  let codes = (req.query.codes || "").split(',')
   codes = codes.map(code => code.replace(/[a-z][0-9]/, '').trim()).filter(code => code !== '')
 
   if(codes.length > 100) {
     res.send("Too many codes. Max 100 codes allowed.")
     return
   }
+
   for(let code of codes) {
     if(code.length > 10) {
       res.send(`Code too long: ${code}. Max 10 characters.`)
       return
     }
   }
-  const results = await Promise.all(codes.map(code =>
-    queue.add(() => buildModel(code))
-  ))
-  console.log(results)
-  res.zip(results, 'bobbins.zip')
+
+  // if all are in the cache, return
+  if(codes.every(code => cache[code])) {
+    console.log("Returning from cache")
+    const results = codes.map(code => cache[code])
+    res.zip(results, 'bobbins.zip')
+    return
+  } else {
+    await Promise.all(codes.filter(code => !status[code]).map(code =>
+      queue.add(() => buildModel(code))
+    ))
+    res.status(202)
+    res.send('Continue wait')
+    return
+  }
 })
 
 app.use(express.static('public'))
