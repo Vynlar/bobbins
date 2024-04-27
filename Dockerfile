@@ -1,9 +1,9 @@
-FROM node:18-alpine
+FROM node:18
 
 COPY package.json .
 COPY package-lock.json .
 
-RUN apk add --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing --repository http://dl-cdn.alpinelinux.org/alpine/edge/main openscad
+RUN apt-get update && apt-get install -y openscad
 
 RUN npm ci
 
